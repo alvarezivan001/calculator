@@ -1,3 +1,10 @@
+let numberButtons = document.querySelectorAll(button);
+
+numberButtons.forEach((button) => {
+    button.addEventListener('onClick', () => {
+        display(button);
+    });
+});
 const add = function(a, b) {
     return a+b;
 }
@@ -10,10 +17,13 @@ const multiply = function(a, b){
 const divide = function(a, b){
     return a/b;
 }
-const operate = function(a, b, op){
+const operate = function(a, op, b){
     return op == '+' ? add(a,b) :
             op == '-' ? subtract(a,b) :
             op == '*' ? multiply(a,b) :
             op == '/' ? divide(a,b) :
             'OOPS';
+}
+const display = function(buttonText) {
+    
 }
