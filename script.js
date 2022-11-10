@@ -10,9 +10,19 @@ numberButtons.forEach((button) => {
        { display(button.getAttribute('id'), giveAnswer);}
         else if(button.getAttribute('class') == "op")
         {
-            operator = button.getAttribute('id');
-            previousValue = displayValue;
-            displayValue = 0;
+            if(operator == '')
+            {
+                operator = button.getAttribute('id');
+                previousValue = displayValue;
+                displayValue = 0;
+            }
+            else{
+                let operation = operate(previousValue, operator, displayValue);
+                previousValue = Number(operation);
+                giveAnswer= true;
+               display(operation, giveAnswer);
+               operator = button.getAttribute('id');
+            }
         }
         else if(button.getAttribute('id') == '=')
         {
@@ -40,7 +50,9 @@ const multiply = function(a, b){
     return a*b;
 }
 const divide = function(a, b){
-    return a/b;
+    let num = a/b;
+    return Math.round((num + Number.EPSILON) * 100) / 100;
+
 }
 const operate = function(a, op, b){
     if(op == '/' && b == 0)
@@ -55,39 +67,25 @@ const operate = function(a, op, b){
 const display = function(buttonId, answer) {
     const divDisplay = document.querySelector('div');
     if(displayValue == 0 && !answer)
-    {displayValue = Number(buttonId);}
+    {
+        displayValue = Number(buttonId);
+        divDisplay.textContent = displayValue;
+    }
     else if(!answer)
     {
         let concatValue = displayValue.toString();
         concatValue += buttonId;
         displayValue = Number(concatValue);
+        divDisplay.textContent = displayValue;
     }
     else
     {
         displayValue = Number(buttonId);
         giveAnswer = false;    
+        divDisplay.textContent = displayValue;
+        operator = '';
+        displayValue = 0;
     }
-    divDisplay.textContent = displayValue;
-    // numberButtons = document.querySelectorAll('button');
-    // numberButtons.forEach((button) => {
-    //     button.addEventListener('click', () => {
-    //   if(typeof Number(button.getAttribute('id')) == 'number' && !isNaN(Number(button.getAttribute('id'))) )
-    //        { display(button.getAttribute('id'));}
-    //         else if(button.getAttribute('class') == "op")
-    //         {
-    //             operator = button.getAttribute('id');
-    //             previousValue = displayValue;
-    //         }
-    //         else if(button.getAttribute('id') == '=')
-    //         {
-    //             operation = operate(previousValue,operator,displayValue);
-    //             display(operation.toString());
-                
-    //         }
-    //         else if(button.getAttribute('id') == 'clear')
-    //         {clearCalc();}
-    //     });
-    // });
 }
 
 const clearCalc = function() {
