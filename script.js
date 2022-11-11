@@ -3,18 +3,24 @@ let displayValue = 0;
 let operator = '';
 let previousValue = 0;
 let giveAnswer = false;
+let numEntered = false;
 
 numberButtons.forEach((button) => {
     button.addEventListener('click', () => {
         if(typeof Number(button.getAttribute('id')) == 'number' && !isNaN(Number(button.getAttribute('id'))) )
-       { display(button.getAttribute('id'), giveAnswer);}
+        { 
+           display(button.getAttribute('id'), giveAnswer);
+           numEntered = true;
+        }
         else if(button.getAttribute('class') == "op")
         {
             if(operator == '')
             {
                 operator = button.getAttribute('id');
-                previousValue = displayValue;
-                displayValue = 0;
+                if(displayValue !== 0) {
+                    previousValue = displayValue;
+                    displayValue = 0;
+                }
             }
             else{
                 let operation = operate(previousValue, operator, displayValue);
@@ -23,17 +29,29 @@ numberButtons.forEach((button) => {
                display(operation, giveAnswer);
                operator = button.getAttribute('id');
             }
+            numEntered = false;
         }
         else if(button.getAttribute('id') == '=')
         {
             let operation = operate(previousValue,operator,displayValue);
-            giveAnswer = true;
-            if(isNaN(operation)) {
+           
+            if(numEntered == false)
+            {alert("Enter a number plz");}
+            else if(operator == '')
+            {
+                alert("Enter a operation next time");
+                giveAnswer = false;
+            }
+            else if(isNaN(operation)) {
                 alert("Do not divide by 0 plz");
                 clearCalc();
                 giveAnswer = false;
             }
-            else{display(operation, giveAnswer);}
+            else{
+                giveAnswer = true;
+                previousValue = Number(operation);
+                display(operation, giveAnswer);
+            }
             
         }
         else if(button.getAttribute('id') == 'clear')
@@ -80,11 +98,13 @@ const display = function(buttonId, answer) {
     }
     else
     {
+        
         displayValue = Number(buttonId);
         giveAnswer = false;    
         divDisplay.textContent = displayValue;
         operator = '';
         displayValue = 0;
+        numEntered = true;
     }
 }
 
